@@ -8,6 +8,16 @@ using namespace std;
 void main()
 {
 	uint64 n;
-	cin >> n;
-	cout<<findnthprime(n)<<endl;
+	uint64 answer;
+	//cin >> n;
+	n = 10000000;
+	answer = findnthprime(n);
+	if (answer == 0)
+	{
+		cout << "invalid input" << endl;
+	}
+	else
+	{
+		cout << answer<< endl;
+	}
 }
