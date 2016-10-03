@@ -10,7 +10,7 @@ void main()
 	uint64 n;
 	uint64 answer;
 	//cin >> n;
-	n = 10000000;
+	n = 1000000000;
 	answer = findnthprime(n);
 	if (answer == 0)
 	{

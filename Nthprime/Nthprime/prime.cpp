@@ -24,8 +24,8 @@ uint64 findnthprime(uint32 n)
 
 		bool *p_lib= new bool[bound];
 		bool *sieve = new bool[segmentsize];
-		uint32 count = 3, i = 2, s = 2, pNext = 0, pPrimes = 0,j = 0 ;//primes contain 2,3,5
-		uint64  high, low,l=0;
+		uint32 count = 3,  pNext = 0, pPrimes = 0,j = 0 ;//primes contain 2,3,5
+		uint64  high, i = 2, low,l=0;
 		uint32 *primes = new uint32[bound];//save the sieve prime
 		uint64 *next = new uint64[bound];//save the next sieve position
 
@@ -79,9 +79,10 @@ uint64 findnthprime(uint32 n)
 			}
 		}
 
-		for (uint64 low = bound,s=bound; low <= maxmum; low += segmentsize) {
+		for (low = bound; low <= maxmum; low += segmentsize) 
+		{
 			high = low + segmentsize - 1 < maxmum - 1 ? low + segmentsize - 1 : maxmum - 1;
-			for ( i = low; i < high; i++)
+			for ( i = low; i <= high; i++)
 			{
 				if (segment[i%segmentsize])
 				{
@@ -123,6 +124,10 @@ uint64 findnthprime(uint32 n)
 					}
 				}
 		}
+		delete[] primes;
+		delete[] p_lib;
+		delete[] next;
+		delete[] sieve;
 		return 0;
 	}
 
