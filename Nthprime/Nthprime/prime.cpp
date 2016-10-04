@@ -24,8 +24,7 @@ uint64 findnthprime(uint32 n)
 
 		bool *p_lib= new bool[bound];
 		bool *sieve = new bool[segmentsize];
-		uint32 count = 3,  pNext = 0, pPrimes = 0,j = 0 ;//primes contain 2,3,5
-		uint64  high, i = 2, low,l=0;
+		uint64  count = 3,high, i = 2, low,l=0,s = 0, pNext = 0, pPrimes = 0, j = 0; //primes contain 2,3,5
 		uint32 *primes = new uint32[bound];//save the sieve prime
 		uint64 *next = new uint64[bound];//save the next sieve position
 
@@ -47,9 +46,11 @@ uint64 findnthprime(uint32 n)
 				i++;
 				continue;
 			}
-			if (p_lib[i] == false) {
+			if (p_lib[i] == false) 
+			{
 				count++;
-				if (count == n) {
+				if (count == n)
+				{
 					delete [] primes;
 					delete[] p_lib;
 					delete[] next;
@@ -79,43 +80,52 @@ uint64 findnthprime(uint32 n)
 			}
 		}
 
-		for (low = bound; low <= maxmum; low += segmentsize) 
+		for (low = bound; low <= maxmum; low += segmentsize)
 		{
+			s = low%segmentsize;
 			high = low + segmentsize - 1 < maxmum - 1 ? low + segmentsize - 1 : maxmum - 1;
-			for ( i = low; i <= high; i++)
+			for (i = 0; i <= high - low; i++)
 			{
-				if (segment[i%segmentsize])
+
+				if (segment[(i + s) % segmentsize])
 				{
-					sieve[i-low] = true;
+					sieve[i] = true;
 				}
 				else
 				{
-					sieve[i-low] = false;
+					sieve[i] = false;
 				}
 			}
-				
-		
+
+
 			i = 4;//2,3,5,7,11,13,17 has definetly been erased
-			while ( i<pPrimes) 
+			while (i < pPrimes)
 			{
 				if (next[i] > high)
 				{
 					i++;
 					continue;
 				}
-				j = next[i]-low;
+				if (next[i] < low)
+				{
+					return 0;
+				}
+				j = next[i] - low;
 				for (; j < segmentsize; j += primes[i])
 				{
 					sieve[j] = true;
 				}
-				next[i] = j+low;
+				next[i] = j + low;
 				i++;
 			}
 
-			for (; l <= high; l += 2)
-				if (sieve[l - low] ==false) {
+			while (l <= high)
+			{
+				if (sieve[l - low] == false)
+				{
 					count++;
-					if (count == n) {
+					if (count == n)
+					{
 						delete[] primes;
 						delete[] p_lib;
 						delete[] next;
@@ -123,6 +133,8 @@ uint64 findnthprime(uint32 n)
 						return l;
 					}
 				}
+				l += 2;
+			}
 		}
 		delete[] primes;
 		delete[] p_lib;
