@@ -84,6 +84,8 @@ uint64 findnthprime(uint32 n)
 		{
 			s = low%segmentsize;
 			high = low + segmentsize - 1 < maxmum - 1 ? low + segmentsize - 1 : maxmum - 1;
+			
+			//init the sieve
 			for (i = 0; i <= high - low; i++)
 			{
 
@@ -99,16 +101,13 @@ uint64 findnthprime(uint32 n)
 
 
 			i = 4;//2,3,5,7,11,13,17 has definetly been erased
+			//sieve
 			while (i < pPrimes)
 			{
 				if (next[i] > high)
 				{
 					i++;
 					continue;
-				}
-				if (next[i] < low)
-				{
-					return 0;
 				}
 				j = next[i] - low;
 				for (; j < segmentsize; j += primes[i])
@@ -118,7 +117,7 @@ uint64 findnthprime(uint32 n)
 				next[i] = j + low;
 				i++;
 			}
-
+			//count
 			while (l <= high)
 			{
 				if (sieve[l - low] == false)
