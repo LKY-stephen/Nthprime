@@ -7,7 +7,7 @@ using namespace std;
 
 void main()
 {
-	uint64 n;
+	uint32 n;
 	uint64 answer;
 	//cin >> n;
 	n = 100000000;

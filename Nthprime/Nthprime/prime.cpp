@@ -25,14 +25,16 @@ uint64 findnthprime(uint32 n)
 
 
 		bool *p_lib= new bool[bound];
-		uint32 i = 2,s = 0, j = 0,  pNext = 0, pPrimes = 0;
+		uint32 i = 2, m = 0, k = 0,s = (bound / logx), j = 0, pNext = 0, pPrimes = 0;
 		uint64  count = 3, high,low, l = 0 ; //primes contain 2,3,5
-		uint32 *primes = new uint32[bound];//save the sieve prime
-		uint32 *next = new uint32[bound];//save the next sieve position
+		uint32 *primes = new uint32[s];//save the sieve prime
+		uint32 *next = new uint32[s];//save the next sieve position
 
 		//init bound array
-		for ( i = 0; i < bound; i++)
+		for (i = 0; i < bound; i++)
+		{
 			p_lib[i] = false;
+		}
 		//init wheel array
 		for ( i = 0; i < wheelfactornumber; i++)
 		{
@@ -92,20 +94,20 @@ uint64 findnthprime(uint32 n)
 				}
 			}
 		}
-
+		m = bound%segmentsize;
+		s = l - bound;
 		for (low = bound; low <= maxmum; low += segmentsize)
 		{
-			s = low%segmentsize;
 			high = low + segmentsize - 1 < maxmum - 1 ? low + segmentsize - 1 : maxmum - 1;
 			j = high - low;
 			//init the sieve
 			for (i = 0; i <= j; i++)
 			{
-				if (s >= segmentsize)
+				if (m >= segmentsize)
 				{
-					s -= segmentsize;
+					m -= segmentsize;
 				}
-				sieve[i] = segment[s++] ? true : false;
+				sieve[i] = segment[m++] ? true : false;
 			}
 
 
@@ -119,29 +121,33 @@ uint64 findnthprime(uint32 n)
 					continue;
 				}
 				j = next[i];
-				s = primes[i];
+				k = primes[i];
+
 				while (j < segmentsize)
 				{
 					sieve[j] = true;
-					j += s;
+					j += k;
 				}
 				next[i++] = j-segmentsize;
 			}
 			//count
-			while (l <= high)
+			
+			j = high - low;
+			while (s <= j)
 			{
-				if (sieve[l - low] == false)
+				if (sieve[s] == false)
 				{
-					count++;
-					if (count == n)
+					if (++count == n)
 					{
 						delete[] primes;
 						delete[] next;
-						return l;
+						return s+low;
 					}
 				}
-				l += 2;
+				s += 2;
 			}
+			l = s + low;
+			s -= segmentsize;
 		}
 		delete[] primes;
 		delete[] next;
