@@ -13,7 +13,6 @@ uint64 findnthprime(uint32 n)
 
 	uint64 maxmum;
 	uint32 bound;
-
 	//determin bin
 	judgebin(&n, &maxmum, &bound);
 	if (!maxmum)
@@ -24,8 +23,8 @@ uint64 findnthprime(uint32 n)
 	//init sieve system
 	bool *p_lib = new bool[bound];
 	bool *sieve = new bool[segmentsize];
-	uint32 blocksize = 0, start = segmentfactornumber - 3, wheelpointer = 0, s = 0, pNext = 0, pPrimes = 0,tempprime=0,j = 0 ;
-	uint64 i = 2, count = 3, high, low, l = 0, tempnext=0; //primes contain 2,3,5
+	uint32 count = 3,i = 2,blocksize = 0, start = segmentfactornumber - 3, wheelpointer = 0, s = 0, pointer = 0,tempprime=0,j = 0,tempnext2=0 ;
+	uint64 high, low, l = 0, tempnext1=0; //primes contain 2,3,5
 	uint32 *primes = new uint32[bound];//save the sieve prime
 	uint64 *next = new uint64[bound];//save the next sieve position
 
@@ -50,20 +49,22 @@ uint64 findnthprime(uint32 n)
 	{
 		if (p_lib[i])
 		{
-			count++;
-			if (count == n)
+			
+			if (count++ == n)
 			{
 				delete[] primes;
 				delete[] p_lib;
 				delete[] next;
 				return i;
 			}
-			primes[pPrimes++] = i;
-			for (tempnext = i*i; tempnext < bound; tempnext += i)
+			primes[pointer] = i;
+			tempnext1 = i;
+			tempnext1 *= i;
+			for (; tempnext1 < bound; tempnext1 += i)
 			{
-				p_lib[tempnext] = false;
+				p_lib[tempnext1]= false;
 			}
-			next[pNext++] = tempnext-bound;
+			next[pointer++] = tempnext1-bound;
 		}
 		i++;
 	}
@@ -107,30 +108,29 @@ uint64 findnthprime(uint32 n)
 
 
 		i = start;//2,3,5,7,11,13 has definetly been erased
-		while (i < pPrimes)
+		while (i < pointer)
 		{
 			if (next[i] > segmentsize)
 			{
 				next[i++] -= segmentsize;
 				continue;
 			}
-			tempnext = next[i];
+			tempnext2 = next[i];
 			tempprime = primes[i];
-			for (; tempnext < segmentsize; tempnext += tempprime)
+			for (; tempnext2 < segmentsize; tempnext2 += tempprime)
 			{
-				sieve[tempnext] = true;
+				sieve[tempnext2] = true;
 			}
-			next[i] = tempnext - segmentsize;
+			next[i] = tempnext2 - segmentsize;
 			i++;
 		}
 
 
 		while (s < segmentsize)
 		{
-			if (sieve[s] == false)
+			if (!sieve[s])
 			{
-				count++;
-				if (count == n)
+				if (++count == n)
 				{
 					delete[] primes;
 					delete[] next;
@@ -148,7 +148,7 @@ uint64 findnthprime(uint32 n)
 	return 0;
 }
 
-void judgebin(uint32 * n, uint64 * maxmun, uint32 * square)
+void judgebin(uint32 *n, uint64 *maxmun, uint32 *square)
 {
 	//determin which bin contain the prime
 	if (*n <= 0) {
