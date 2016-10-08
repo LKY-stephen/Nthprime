@@ -10,7 +10,7 @@ void main()
 	uint32 n;
 	uint64 answer;
 	//cin >> n;
-	n = 100000000;
+	n = 1000000000;
 	answer = findnthprime(n);
 	if (answer == 0)
 	{
@@ -20,4 +20,5 @@ void main()
 	{
 		cout << answer<< endl;
 	}
+	
 }
