@@ -5,20 +5,29 @@
 using namespace std;
 
 
-void main()
+int main()
 {
 	uint32 n;
 	uint64 answer;
-	//cin >> n;
-	n = 1000000000;
+	try
+	{
+	   cin >> n;
+	}
+	catch (exception& e)  
+  	{  
+           cout << "Standard exception: " << e.what() << endl;  
+	   return 1;
+   	}  
+	//n = 1000000000;
 	answer = findnthprime(n);
 	if (answer == 0)
 	{
-		cout << "invalid input" << endl;
+           cout << "invalid input" << endl;
 	}
 	else
 	{
-		cout << answer<< endl;
+	   cout << answer<< endl;
 	}
+	return 0;
 	
 }
